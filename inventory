@@ -1,0 +1,15 @@
+[lamp]
+host1
+
+[fileservers]
+host2
+
+[servers:children]
+lamp
+fileservers
+
+[all:vars]
+
+ansible_connection = ssh
+ansible_user = vagrant
+#ansible_ssh_pass = vagrant
