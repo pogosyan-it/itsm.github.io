@@ -7,4 +7,4 @@
   tasks:
     - name: Print Array Values
       debug:
-        msg: "User {{ users.linda.username }} has homedirectory {{ users.linda.homedir }} and shell {{ users.linda.shell }}"
+        msg: "User {{ users.user1.username }} has homedirectory {{ users.user2.homedir }} and shell {{ users.user3.shell }}"
