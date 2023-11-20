@@ -1,0 +1,12 @@
+[group1]
+192.168.11.150
+
+
+[group2]
+192.168.11.151
+
+[group3]
+192.168.11.152
+
+[local]
+linux1 ansible_host=192.168.33.19 ansible_user=it ansible_ssh_pass=password
