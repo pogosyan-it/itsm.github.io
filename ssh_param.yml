@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    root_access: "PermitRootLogin yes"
+
+  tasks:
+    - name: Setting facts so that they will be persisted in the fact cache
+      ansible.builtin.shell: |
+        a=$(cat /etc/ssh/sshd_config | /bin/grep PermitRootLogin | /usr/bin/head -n 1)
+        echo $a
+      register: command_output
+
+    - debug:
+        var: command_output.stdout_lines
+
+    - name: "Check config"
+      debug:
+        msg: "{{ command_output.stdout }} SSH config is NOT ok"
+      when: command_output.stdout  == root_access
+
+    - name: "Replace string in ssh config"
+      replace:
+        path:  /etc/ssh/sshd_config
+        regexp: '{{ root_access }}'
+        replace: 'PermitRootLogin no'
+        backup: true
+      register: out
+
+    - debug:
+        var: out
+      when: command_output.stdout  == root_access
+
+      #- name: "Restart service sshd"
+      #service:
+      #  name: sshd
+      #  state: restarted
+      #when: command_output.stdout  == root_access
+
+    - name: "Restart service sshd"
+      ansible.builtin.shell: |
+        a=$(/usr/bin/stat --format=%X  /etc/ssh/sshd_config)
+        b=$(/bin/date +%s)
+        c=$((b-a))
+        if [ $c -le 30 ]; then systemctl restart sshd; echo "TRUE"; else echo "FALSE"; fi
+      register: out2
+
+    - debug:
+        var: out2
