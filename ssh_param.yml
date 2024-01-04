@@ -25,25 +25,19 @@
         regexp: '{{ root_access }}'
         replace: 'PermitRootLogin no'
         backup: true
+      notify:
+        - Restart sshd
       register: out
 
     - debug:
         var: out
       when: command_output.stdout  == root_access
 
-      #- name: "Restart service sshd"
-      #service:
-      #  name: sshd
-      #  state: restarted
-      #when: command_output.stdout  == root_access
-
-    - name: "Restart service sshd"
-      ansible.builtin.shell: |
-        a=$(/usr/bin/stat --format=%X  /etc/ssh/sshd_config)
-        b=$(/bin/date +%s)
-        c=$((b-a))
-        if [ $c -le 30 ]; then systemctl restart sshd; echo "TRUE"; else echo "FALSE"; fi
-      register: out2
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
 
     - debug:
         var: out2
