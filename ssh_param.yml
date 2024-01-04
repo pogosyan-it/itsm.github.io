@@ -38,6 +38,3 @@
       ansible.builtin.service:
         name: sshd
         state: restarted
-
-    - debug:
-        var: out2
