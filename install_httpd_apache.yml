@@ -3,22 +3,21 @@
   become: yes
   tasks:
 
-  - name: Debug
-    debug: msg={{ ansible_os_family }}
+  - name: Check and Print Linux Version
+    debug: var=ansible_os_family
 
-  - set_fact: package_name=httpd
+  - name: Install Apache Web Server on Rhel
+    yum: name=httpd state=latest
     when: ansible_os_family == "RedHat"
 
-  - set_fact: package_name=apache2
+  - name: Install Apache Web Server on Ubuntu
+    apt: name=apache2 state=latest
     when: ansible_os_family == "Debian"
 
-  - name: Install httpd package
-    yum: name={{ package_name }} state=latest
+  - name: Start Web Server on Rhel
+    service: name=httpd state=started enabled=yes
     when: ansible_os_family == "RedHat"
 
-  - name: Debug1
-    debug: msg={{ package_name }}
-
-  - name: Install apache2 package
-    apt: name={{ package_name }} state=latest
+  - name: Start Web Server on Ubuntu
+    service: name=apache2 state=started enabled=yes
     when: ansible_os_family == "Debian"
