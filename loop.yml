@@ -1,0 +1,32 @@
+---
+- name: Loop Playbook
+  hosts: all
+  become: yes
+  vars:
+    source_folder: ./python
+    dest_folder: /tmp/
+
+  tasks:
+  - name: "Say Hello to ALL"
+    debug: msg="Hello {{ item }}"
+    loop:
+      - "Vasya"
+      - "Petya"
+      - "Masha"
+      - "Kolya"
+
+
+  - name: Loop DO Until Example
+    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    register: output
+    delay: 2
+    retries: 10
+    until: output.stdout.find("ZZZZ") == false
+
+  - name: Print Final Output
+    debug:
+      var: output.stdout
+
+  - name: Copy HomePage file to Web Server
+    copy: src={{ item }} dest={{ dest_folder }} mode=644
+    with_fileglob: "{{ source_folder  }}/*.*"
