@@ -17,11 +17,11 @@
 
 
   - name: Loop DO Until Example
-    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    shell: echo -n A >> myfile.txt && cat myfile.txt
     register: output
     delay: 2
     retries: 10
-    until: output.stdout.find("ZZZZ") == false
+    until: output.stdout.find("AAAA") == false
 
   - name: Print Final Output
     debug:
