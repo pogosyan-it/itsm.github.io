@@ -1,0 +1,29 @@
+---
+- name: My Playbook
+  hosts: all
+  become: yes
+
+  vars:
+    mytext: "Hello World"
+
+  tasks:
+  - name: Ping test
+    ping:
+
+  - name: Create file1
+    copy:
+      dest: /home/file1.txt
+      content: |
+        This is File N1
+        On Russian Privet
+        On English {{ mytext }}
+    delegate_to: 192.168.11.150
+
+
+  - name: Create file2
+    copy:
+      dest: /home/file2.txt
+      content: |
+        This is File N2
+        On Russian Privet
+        On English {{ mytext  }}
