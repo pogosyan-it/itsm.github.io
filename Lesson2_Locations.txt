@@ -1,0 +1,49 @@
+Проверим, на виртуальной машине должен быть установлен и запущен nginx версии 1.24
+
+Создайте virtual host для host: test.{base_domain} и пропишите настройки, которые будут реализовывать следующую логику:
+
+Все запросы на /admin/ и все вложенные файлы и директории должны возвращать 403 (вне зависимости от следующих условий — то есть txt / jpg / png в /admin/ также возвращают 403).
+Все запросы на /admin/readme.md должны возвращать 200.
+Все запросы на файлы с расширением jpg и png в любом регистре должны возвращать 202.
+Все запросы на файлы с расширением TXT должны возвращать 204 (запросы на файлы txt должны возвращать 404).
+Проверьте, что все location возвращают необходимые значения и отправляйте задание на проверку.
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name test.test.vm-ceylm.devops.rebrainme.study;
+
+        location ^~ /admin {
+            default_type text/plain;
+            return 403 "\n";
+        }
+
+
+        location /admin/readme.md {
+            default_type text/plain;
+            return 200 "\n";
+        }
+
+        location ~*\.jpg$ {
+            default_type text/plain;
+            return 202 "\n";
+        }
+
+        location ~*\.png$ {
+            default_type text/plain;
+            return 202 "\n";
+        }
+
+
+        location ~\.TXT$ {
+            default_type text/plain;
+            return 204 "\n";
+        }
+
+        location ~\.txt$ {
+            default_type text/plain;
+            return 402 "\n";
+        }
+
+}
